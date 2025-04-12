@@ -66,21 +66,32 @@ void drawLine(int x1, int y1, int x2, int y2, int color) {
 
 //drawing the Cube
 void drawCube(int mat1[3], int color) {
-	drawLine(320, 240, mat1[0] + 320, 240, color);
-	drawLine(320, 240, 320, 240 - mat1[1], color);
-	drawLine(mat1[0] + 320, 240, mat1[0] + 320, 240 - mat1[1], color);
-	drawLine(320, 240 - mat1[1], mat1[0] + 320, 240 - mat1[1], color);
-	
-	drawLine(320 - mat1[2], mat1[2] + 240, 320 - mat1[2], mat1[2] + 240 - mat1[1], color);
-	drawLine(320 - mat1[2], mat1[2] + 240, 320 - mat1[2] + mat1[0], mat1[2] + 240, color);
-	drawLine(320 - mat1[2], mat1[2] + 240 - mat1[1], 320 - mat1[2] + mat1[0], mat1[2] + 240 - mat1[1], color);
-	drawLine(320 - mat1[2] + mat1[0], mat1[2] + 240, 320 - mat1[2] + mat1[0], mat1[2] + 240 - mat1[1], color);
-	
-	drawLine(320 - mat1[2], mat1[2] + 240, 320, 240, color);
-	drawLine(320, 240, 320 + mat1[0], 240 - mat1[1], color);
-	drawLine(320 + mat1[0], 240, 320 - mat1[2] + mat1[0], mat1[2] + 240, color);
-	drawLine(320, 240 - mat1[1], 320 - mat1[2], mat1[2] + 240 - mat1[1], color);
+    int width = mat1[0];
+    int height = mat1[1];
+    int depth = mat1[2];
+
+    int originX = 320;
+    int originY = 240;
+
+    // Front face
+    drawLine(originX, originY, originX + width, originY, color);                          // Bottom
+    drawLine(originX, originY, originX, originY - height, color);                        // Left
+    drawLine(originX + width, originY, originX + width, originY - height, color);        // Right
+    drawLine(originX, originY - height, originX + width, originY - height, color);       // Top
+
+    // Back face
+    drawLine(originX - depth, originY + depth, originX - depth + width, originY + depth, color);                      // Bottom
+    drawLine(originX - depth, originY + depth, originX - depth, originY + depth - height, color);                    // Left
+    drawLine(originX - depth + width, originY + depth, originX - depth + width, originY + depth - height, color);    // Right
+    drawLine(originX - depth, originY + depth - height, originX - depth + width, originY + depth - height, color);   // Top
+
+    // Connecting edges between front and back
+    drawLine(originX, originY, originX - depth, originY + depth, color);                                                  // Bottom-left
+    drawLine(originX + width, originY, originX - depth + width, originY + depth, color);                                 // Bottom-right
+    drawLine(originX, originY - height, originX - depth, originY + depth - height, color);                               // Top-left
+    drawLine(originX + width, originY - height, originX - depth + width, originY + depth - height, color);              // Top-right
 }
+
 
 
 void drawAxes() {
@@ -127,7 +138,9 @@ void drawAxes() {
 		j = j + 40;
 		k++;
 	}
-	
+	outtextxy(10, 80, (char*)"Key:");
+	outtextxy(10, 100, (char*)"Blue color: Original Cube");
+	outtextxy(10, 120, (char*)"Green color: Reflected Cube");
 }
 
 void getNumberInput(int *num, int x, int y) {
@@ -199,6 +212,7 @@ int main() {
 	int mat1[3] = {x1len, y1len, z1len};
 	drawAxes();
 	drawCube(mat1, 1);
+	outtextxy(10, 10, (char*)"Press any key to reflect it along the Z axis...");
 	
 	getch();
 	int mat2[3];
@@ -206,6 +220,15 @@ int main() {
 	cleardevice();
 	drawAxes();
 	drawCube(mat2, 2);
+	
+	outtextxy(10, 10, (char*)"Press any key to show both the cubes together...");
+	getch();
+	cleardevice();
+	drawAxes();
+	drawCube(mat2, 2);
+	drawCube(mat1, 1);
+	
+	outtextxy(10, 10, (char*)"Press any key to exit...");
 	
 	getch();
 	closegraph();
